@@ -76,10 +76,7 @@ func run(cmd *cobra.Command, argv []string) error {
 		CompartmentId:      common.String(args.compartmentId),
 		Shape:              common.String(args.shape),
 		DisplayName:        common.String(fmt.Sprintf("gha-runner-%s-%s", args.arch, time.Now().Format("20060102-150405"))),
-		CreateVnicDetails: &core.CreateVnicDetails{
-			SubnetId:       common.String(args.subnetId),
-			AssignPublicIp: common.Bool(true),
-		},
+		SubnetId:           common.String(args.subnetId), // required
 		Metadata: map[string]string{
 			"ssh_authorized_keys": sshKeyPair.PublicKey,
 		},
@@ -88,13 +85,10 @@ func run(cmd *cobra.Command, argv []string) error {
 			BootVolumeSizeInGBs: common.Int64(args.bootVolumeSizeInGBs),
 			BootVolumeVpusPerGB: common.Int64(120),
 		},
-	}
-
-	if strings.Contains(args.shape, ".Flex") {
-		launchDetails.ShapeConfig = &core.LaunchInstanceShapeConfigDetails{
-			MemoryInGBs: common.Float32(args.shapeMemoryInGBs),
-			Ocpus:       common.Float32(args.shapeOcpus),
-		}
+		CreateVnicDetails: &core.CreateVnicDetails{
+			AssignPublicIp: common.Bool(true), // optional, no SubnetId here
+		},
+		ShapeConfig: nil, // important: must be nil for standard shapes
 	}
 
 	machine, err := oci.NewEphemeralMachine(ctx, computeClient, networkClient, launchDetails)
@@ -225,6 +219,6 @@ func init() {
 	flags.StringVar(
 		&args.imageId,
 		"image-id",
-		"",
+		"ocid1.image.oc1.iad.aaaaaaaawkg4mcnr72dcgtprfpjovsvipdabun2xfli7ns3ni7vdn4m3id3a",
 		"OCI Image OCID to use for the runner (required)")
 }
