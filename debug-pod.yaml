@@ -8,6 +8,7 @@ spec:
   containers:
   - name: runner
     image: akashjaiswal03/my-cloudrunner-oci:latest
+    imagePullPolicy: Always
     command: ["/bin/sh", "-c", "sleep 3600"]
     env:
     - name: OCI_CONFIG_FILE

@@ -21,6 +21,7 @@ var Cmd = &cobra.Command{
 	Long: "Run a GitHub Actions runner (on Oracle Cloud Infrastructure)",
 	RunE: run,
 }
+
 var args struct {
 	debug bool
 
@@ -32,6 +33,7 @@ var args struct {
 	shapeOcpus          float32
 	shapeMemoryInGBs    float32
 	bootVolumeSizeInGBs int64
+	imageId             string
 }
 
 func main() {
@@ -47,7 +49,8 @@ func main() {
 
 func run(cmd *cobra.Command, argv []string) error {
 	ctx := context.Background()
-	// Initialize the OCI client
+
+	// Initialize the OCI clients
 	computeClient, err := core.NewComputeClientWithConfigurationProvider(common.DefaultConfigProvider())
 	if err != nil {
 		return fmt.Errorf("failed to create compute client: %w", err)
@@ -57,23 +60,9 @@ func run(cmd *cobra.Command, argv []string) error {
 		return fmt.Errorf("failed to create network client: %w", err)
 	}
 
-	// List Images and retrieve the latest ID by type and arch
-
-	images, err := computeClient.ListImages(ctx, core.ListImagesRequest{
-		CompartmentId:  common.String(args.compartmentId),
-		DisplayName:    common.String(fmt.Sprintf("ubuntu-22.04-%s-gha-image", args.arch)),
-		SortBy:         core.ListImagesSortByTimecreated,
-		SortOrder:      core.ListImagesSortOrderDesc,
-		Limit:          common.Int(1),
-		LifecycleState: core.ImageLifecycleStateAvailable,
-	})
-	if err != nil {
-		panic(err)
+	if args.imageId == "" {
+		return fmt.Errorf("must provide --image-id for the instance")
 	}
-	if len(images.Items) == 0 {
-		return fmt.Errorf("no images found")
-	}
-	latestImage := images.Items[0]
 
 	// Create SSH Key Pair
 	sshKeyPair, err := remote.CreateSSHKeyPair()
@@ -95,7 +84,7 @@ func run(cmd *cobra.Command, argv []string) error {
 			"ssh_authorized_keys": sshKeyPair.PublicKey,
 		},
 		SourceDetails: &core.InstanceSourceViaImageDetails{
-			ImageId:             common.String(*latestImage.Id),
+			ImageId:             common.String(args.imageId),
 			BootVolumeSizeInGBs: common.Int64(args.bootVolumeSizeInGBs),
 			BootVolumeVpusPerGB: common.Int64(120),
 		},
@@ -120,16 +109,13 @@ func run(cmd *cobra.Command, argv []string) error {
 		}
 	}()
 
-	// Sleep before checking if the instance is ready
-	time.Sleep(30 * time.Second)
-
 	// Wait for the machine to be ready
+	time.Sleep(30 * time.Second)
 	err = machine.WaitForInstanceReady(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to wait for instance to be ready: %w", err)
 	}
 
-	// TODO: Use internal IP or external IP?  Internal IP might be tricky cross-project.  External IP means we need a public IP.
 	ip := machine.ExternalIP()
 	if ip == "" {
 		return fmt.Errorf("cannot find ip for instance")
@@ -167,10 +153,7 @@ func run(cmd *cobra.Command, argv []string) error {
 
 	for _, cmd := range commands {
 		log.Println("running ssh command", "command", cmd)
-
-		// Avoid logging token
 		expanded := strings.ReplaceAll(cmd, "${ACTIONS_RUNNER_INPUT_JITCONFIG}", os.Getenv("ACTIONS_RUNNER_INPUT_JITCONFIG"))
-
 		output, err := sshClient.RunCommand(ctx, expanded)
 		if err != nil {
 			log.Println(err, "running ssh command", "command", cmd, "output", string(output[:]))
@@ -187,56 +170,61 @@ func init() {
 
 	flags.BoolVar(
 		&args.debug,
-		"debug",
-		false,
-		"Enable debug logging",
-	)
+		"debug", 
+		false, 
+		"Enable debug logging")
+
 	flags.StringVar(
 		&args.arch,
 		"arch",
 		"x86",
-		"Machine architecture",
-	)
+		"Machine architecture")
+
 	flags.StringVar(
 		&args.availabilityDomain,
 		"availability-domain",
 		"US-ASHBURN-AD-1",
-		"Availability Domain",
-	)
+		"Availability Domain")
+
 	flags.StringVar(
 		&args.compartmentId,
 		"compartment-id",
 		"ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q",
-		"Compartment ID",
-	)
+		"Compartment ID")
+
 	flags.StringVar(
 		&args.subnetId,
 		"subnet-id",
 		"ocid1.subnet.oc1.iad.aaaaaaaat5nbqkgivc5mzfueek7cigb34qhhnwpx7h3obneldgtqld6txgca",
-		"Subnet ID",
-	)
+		"Subnet ID")
+
 	flags.StringVar(
 		&args.shape,
 		"shape",
 		"VM.GPU.A10.1",
-		"VM Shape",
-	)
+		"VM Shape")
+
 	flags.Float32Var(
 		&args.shapeOcpus,
 		"shape-ocpus",
 		15,
-		"Number of OCPUs for flexible shapes (e.g., 1.0, 2.0). Required if a '.Flex' shape is used.",
-	)
+		"Number of OCPUs for flexible shapes")
+
 	flags.Float32Var(
 		&args.shapeMemoryInGBs,
 		"shape-memory-in-gbs",
 		240,
-		"Amount of memory in GBs for flexible shapes (e.g., 16.0, 32.0). Required if a '.Flex' shape is used.",
-	)
+		"Memory for flexible shapes")
+
 	flags.Int64Var(
 		&args.bootVolumeSizeInGBs,
 		"boot-volume-size-in-gbs",
 		600,
-		"Boot volume size in GBs.",
-	)
+		"Boot volume size in GBs")
+
+	flags.StringVar(
+		&args.imageId,
+		"image-id",
+		"",
+		"OCI Image OCID to use for the runner (required)")
 }

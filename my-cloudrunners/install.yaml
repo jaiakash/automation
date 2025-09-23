@@ -156,6 +156,7 @@ spec:
         - --availability-domain=US-ASHBURN-AD-1
         - --compartment-id=ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q
         - --subnet-id=ocid1.subnet.oc1.iad.aaaaaaaat5nbqkgivc5mzfueek7cigb34qhhnwpx7h3obneldgtqld6txgca
+        - --image-id=ocid1.image.oc1.iad.aaaaaaaawkg4mcnr72dcgtprfpjovsvipdabun2xfli7ns3ni7vdn4m3id3a
         env:
         - name: OCI_CONFIG_FILE
           value: /etc/oci/config
