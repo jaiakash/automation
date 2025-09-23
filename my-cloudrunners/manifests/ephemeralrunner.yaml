@@ -6,35 +6,35 @@ items:
     annotations:
       actions.github.com/patch-id: "8"
       actions.github.com/runner-group-name: Default
-      actions.github.com/runner-scale-set-name: my-oracle-vm-gpu-a10-1
+      actions.github.com/runner-scale-set-name: kubeflow-oracle-vm-gpu-a10-1
       actions.github.com/runner-spec-hash: 564df7976c
     creationTimestamp: "2025-09-22T22:09:59Z"
     deletionGracePeriodSeconds: 0
     deletionTimestamp: "2025-09-22T22:12:43Z"
     finalizers:
     - my-finalizer
-    generateName: my-oracle-vm-gpu-a10-1-6qjtd-runner-
+    generateName: kubeflow-oracle-vm-gpu-a10-1-6qjtd-runner-
     generation: 2
     labels:
       actions.github.com/organization: jaiakash
       actions.github.com/repository: trainer
-      actions.github.com/scale-set-name: my-oracle-vm-gpu-a10-1
+      actions.github.com/scale-set-name: kubeflow-oracle-vm-gpu-a10-1
       actions.github.com/scale-set-namespace: arc-systems
       app.kubernetes.io/component: runner
-      app.kubernetes.io/instance: my-oracle-vm-gpu-a10-1
+      app.kubernetes.io/instance: kubeflow-oracle-vm-gpu-a10-1
       app.kubernetes.io/managed-by: Helm
-      app.kubernetes.io/name: my-oracle-vm-gpu-a10-1
+      app.kubernetes.io/name: kubeflow-oracle-vm-gpu-a10-1
       app.kubernetes.io/part-of: gha-runner-scale-set
       app.kubernetes.io/version: 0.12.1
       helm.sh/chart: gha-rs-0.12.1
-    name: my-oracle-vm-gpu-a10-1-6qjtd-runner-98cg9
+    name: kubeflow-oracle-vm-gpu-a10-1-6qjtd-runner-98cg9
     namespace: arc-systems
     ownerReferences:
     - apiVersion: actions.github.com/v1alpha1
       blockOwnerDeletion: true
       controller: true
       kind: EphemeralRunnerSet
-      name: my-oracle-vm-gpu-a10-1-6qjtd
+      name: kubeflow-oracle-vm-gpu-a10-1-6qjtd
       uid: 6b84f817-87de-45d0-9a8d-b3e9349c1b3d
     resourceVersion: "5016133"
     uid: 4de396ea-5e9b-43eb-ab3a-79d1c5bb2a0b
@@ -48,16 +48,15 @@ items:
       - args:
         - --arch=amd64
         - --shape=VM.GPU.A10.1
-        - --shape-ocpus=15
-        - --shape-memory-in-gbs=240
-        - --boot-volume-size-in-gbs=200
-        - --availability-domain=US-ASHBURN-AD-1
-        - --compartment-id=ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q
-        - --subnet-id=ocid1.subnet.oc1.iad.aaaaaaaat5nbqkgivc5mzfueek7cigb34qhhnwpx7h3obneldgtqld6txgca
+        - --boot-volume-size-in-gbs=400
+        - --availability-domain=tdbQ:US-ASHBURN-AD-1
+        - --compartment-id=ocid1.compartment.oc1..aaaaaaaaczejzfg7ixiqrl7r4jr5dohrtxfpuhdinrq4okj67hskmhgglyfq
+        - --subnet-id=ocid1.subnet.oc1.iad.aaaaaaaa7b7bezpa3h5iubnkgd5mx3ynhxnrvtnnbiqkponeulfvybsxg35q
+        - --image-id=ocid1.image.oc1.iad.aaaaaaaawkg4mcnr72dcgtprfpjovsvipdabun2xfli7ns3ni7vdn4m3id3a
         env:
         - name: OCI_CONFIG_FILE
           value: /etc/oci/config
-        image: akashjaiswal03/my-cloudrunner-oci:latest
+        image: akashjaiswal03/kubeflow-gpu-cloudrunner-oci:latest
         imagePullPolicy: IfNotPresent
         name: runner
         resources: {}
@@ -73,7 +72,7 @@ items:
         fsGroup: 1001
         supplementalGroups:
         - 999
-      serviceAccountName: my-oracle-vm-gpu-a10-1-gha-rs-no-permission
+      serviceAccountName: kubeflow-oracle-vm-gpu-a10-1-gha-rs-no-permission
       volumes:
       - name: oci-config
         secret:
@@ -92,7 +91,7 @@ items:
     phase: Pending
     runnerId: 185
     runnerJITConfig: eyIucnVubmVyIjoiZXlKQloyVnVkRWxrSWpvaU1UZzFJaXdpUVdkbGJuUk9ZVzFsSWpvaWJYa3RiM0poWTJ4bExYWnRMV2R3ZFMxaE1UQXRNUzAyY1dwMFpDMXlkVzV1WlhJdE9UaGpaemtpTENKRWFYTmhZbXhsVlhCa1lYUmxJam9pVkhKMVpTSXNJa1Z3YUdWdFpYSmhiQ0k2SWxSeWRXVWlMQ0pRYjI5c1NXUWlPaUl4SWl3aVVHOXZiRTVoYldVaU9tNTFiR3dzSWxObGNuWmxjbFZ5YkNJNkltaDBkSEJ6T2k4dmNHbHdaV3hwYm1WeloyaDFZbVYxY3pNdVlXTjBhVzl1Y3k1bmFYUm9kV0oxYzJWeVkyOXVkR1Z1ZEM1amIyMHZRMjlFT0dscU1HUk5TSEoyU0UxcWNFbFRlVGxETVhSbmVsUmxSVTkyVlhWSlFrSldSa0ZSYWxSaFNGcHNPWG93Yldndklpd2lVblZ1Ym1WeVUyTmhiR1ZUWlhSSlpDSTZJalVpTENKU2RXNXVaWEpUWTJGc1pWTmxkRTVoYldVaU9pSnRlUzF2Y21GamJHVXRkbTB0WjNCMUxXRXhNQzB4SWl3aVYyOXlhMFp2YkdSbGNpSTZJbDkzYjNKcklpd2lVMlZ5ZG1WeVZYSnNWaklpT2lKb2RIUndjem92TDJKeWIydGxjaTVoWTNScGIyNXpMbWRwZEdoMVluVnpaWEpqYjI1MFpXNTBMbU52YlM4aUxDSlZjMlZXTWtac2IzY2lPaUowY25WbEluMD0iLCIuY3JlZGVudGlhbHMiOiJleUpUWTJobGJXVWlPaUpQUVhWMGFDSXNJa1JoZEdFaU9uc2lRMnhwWlc1MFNXUWlPaUppTURRNE5tTm1NQzAzTkRJNExUUmxPVEF0T1dSbE5pMDFaRGc0Wm1WbU4yVTBNR1lpTENKQmRYUm9iM0pwZW1GMGFXOXVWWEpzSWpvaWFIUjBjSE02THk5d2FYQmxiR2x1WlhObmFIVmlaWFZ6TXk1aFkzUnBiMjV6TG1kcGRHaDFZblZ6WlhKamIyNTBaVzUwTG1OdmJTOURiMFE0YVdvd1pFMUljblpJVFdwd1NWTjVPVU14ZEdkNlZHVkZUM1pWZFVsQ1FsWkdRVkZxVkdGSVdtdzVlakJ0YUM5ZllYQnBjeTl2WVhWMGFESXZkRzlyWlc0aWZYMD0iLCIuY3JlZGVudGlhbHNfcnNhcGFyYW1zIjoiZXlKa0lqb2lXbk4yTlZkWGJYVkphSEpKZVZsV1VXaEJRMHcyVjJGbk1tczRWMmx2V25vd1ZqRnNhblZoZUN0dVFTOVVWSEZXYWpGSFpsTnJkbUZsYkc4eFZ5dFZPREJtUm5nNWRscFljek5qYTFvd1pXSmtkWGxHWVZGTWJIQndibXBIYUZCaE1YQjRWSEZUU0habVpXWkpSMFZMT0doMGNrSnFUbXRNUmxWS2FFMTFXVzAyVlVoUmVqaDBRMDFJVTI1MUswVk9VSEp2UWxwVWJXVlFTRGhZYUVwaVUyRm1UV2g0UW5kelJtMUViWEZvVkRVd1ZHZ3ZWbnBoVlhkRFVuWjViak5QZERWaVIybFdVVFpEYURWVlYyc3Jia2xxVm5kWVVVRXphblo1VTBoNGFFTjBibEZQVUZOTlNrZE1RblZoWkVocGFYUmFMMkozZDFWMVowZElVbFZPUkVKRFUyVnRVVVZ2TVRkbk5rTjFMMjVCVGpnMU9WRjBiemhvTVZGNVVGSkpXVlExVTI1M2NFbEZOVmRIZG1wa1FtMVNReko0U1cxMVVGRklZVTVxT0RoNU5rNXRTbkJxYTNrNVRVVllaWE1yVW5aelRHNVJQVDBpTENKa2NDSTZJbFJTVTBKMVRXWlhiR0ZWZWt0NkswOW5URU01YW1oek4zaFZWVzlVWkhoaWFIUlVNWFl2Y1RGT0wyZERlRmcxVlhrNFluUmlibFp1YWtVeEsyTm5RMmROZEhKdFNWSlhkbGRZTUVoQldraGtVRmwxY0RKU2JTOXJUV1p1TTFWR1VVUmxUVGgyU2xRMmFFcGplVEE1U0RSb1MzZDBTalJuYTJFek1qTkpZVWhEZW5oSEwxaHlWWEpaTjJoU1FUSnBhMVZIZEU1aE4yeE1WakJ0UTFBMlFUTnVkWGRoVVUwNE5YVlJNRDBpTENKa2NTSTZJa1UwYlRGdU4yb3lRbFZaU1RGeVVFUXlNbVpqVlRCRU1rdHNSRWhLVFdZMmJXSk9TbVJqZEUxQ09HTmtaVkZ4SzNGQ1RtWTJNRzR6YUd4WEszQTJhbFEwYWtjeFJtaFJjSFExTjNGTU9HRm1LMjByZFVreFdVVXhURzB2Y0VVeVRFSkViVWg1YTJGRmJIcExWUzkwUVhadk0zQndVRlJ0ZEZNeU5sRmtlRnB4WjFaaVJsRXdRVmRCZGsxdFRUWlpZbVVyZW5JMGEwbHNjSGszV25kNk1UbFViWHB1Y1VsWGFETlFWVDBpTENKbGVIQnZibVZ1ZENJNklrRlJRVUlpTENKcGJuWmxjbk5sVVNJNkltbElXSEJ5WTB4MWVXWTRlbFZaYkU1VlRqQjFXa1JRTkZSUlYwbFdNbVphT1RGWlNXaG1RWEJUZWpFME9ETktSRWhLSzJObFZFODBOakJOWlcxSloyTjFiVTVRTVZSNWVGVXpkbTQzVm5reE1FWlNUV0pCT0ZseFRuZFVNa04xVlVabGRFVmpiMHA2ZVhaT2FuUmxPUzl0UW5sS1EzQkxOMFJtVEhaNFRWZFhSVk5tTlV4MmFXZDFZMUJUVFRSSEwwdFJObklyVlN0dFkwdDNiVGxhWkhSbFNYbFRjU3RNWkZGUE1EMGlMQ0p0YjJSMWJIVnpJam9pTmtONVNtSm9PR3B1VkhRMk1HTjRSVUU0YTA1dlZrdFhkak1yZUhabFZFTmhUSFZZU0hsMk9IcElVR1pFVnprck4xWTFaemxUV2xOc1IwZHJNbEZVWlVWb1NWWjVORXByWW5OUFdHWnJLMFJ2UmxKb1lXSnFRbWx4ZW5GeVVXbGpTa3RwV2xKd05uWmxabUZzT0hwS05qTXZObkJ1WTBwRGJVTkZSV1V2WlVNeU5DdGxOV0ZZYm5oWGFYbG1MMDFaUTJkUlFuQjBORVpLZWpZekszUldSSEJtVWxacmFIVkRhMVowVEZBdlkyRklkbEk0TVU5S1F6ZDFlaXQyV1VWSVIxWm1VME0wWkhOU1dWUmtkR1oxTkU5M2RXczRPRUptZDIxVVRHTlhRalJoVERKYWJHODVVa3RQWVc4ck9FZExTbUV4TVdSWlYzVnBNak0yUkRkWE5UUXljeXN5SzNsRU4zWjJNRlZGVGt4R1dqVmtZM1J4WmxNeVRYUm1hU3RPZFRRMU1sWllOblJEU0dreWVtRlBXVFZRYUdWNU5rRjFjSEZEYTFCTVFYVlBTa3hSZHpVck9YZGlhMmhUZWxOMFIxcDVWbkpSUFQwaUxDSndJam9pT1RKcE5rbFRkQzl5YUd4Mk5qRTRhV2xHY0hweU5VUTRlRmxLZDJnd1UwMTRRbTFKTW1ReVEzUkZURmRMYzNOWU4waDZTeXN4YVhKSk4wbDVOV1JYVFdrd1MycHRSbFl5TUhkemNWQkVOVWRFWjBSNEwyWXdiVlZ3Wm5KQlJESk9abXQ0Y1VKTmEzbHdaQ3RzUkM5MU9YbEdZMWRKTW5odVJISkpORFpuVlVaVVUzQnBVVTB5VFdGVlVGYzNRbGhqTWpGMk5TdEVXRm80VTNCelRWSlNWSFpwVjNSM2VUaDZSbFZqUFNJc0luRWlPaUk0Ukhob2NXNUNTVXAzUkVkSVNGbzBRMUZSWlVoek1GQmliRW81Vm14RVlWWkVNQ3NyUzFCSFNVbzJVRWw0UzBkaVYyNHdUakoyVW1oWU1FWnBkbXhhYXpkb0wweEdaamRNT0ZkMWNUVnZjVWxDUmxKblptOU9XVEZ4WVV4aloxQmtSbkptYm14S1pHTXJaV05MYVVkTU9GZzVVVmx2Um5FNU9WQXZOSGxFVmxCa1VIWTVXQ3RKVVRCM04waFpSbG8yWlhvMGEwZEZNVmxLUTBaRVEyNXZhbkZxU1VWTllrVlNNbk05SW4wPSJ9
-    runnerName: my-oracle-vm-gpu-a10-1-6qjtd-runner-98cg9
+    runnerName: kubeflow-oracle-vm-gpu-a10-1-6qjtd-runner-98cg9
 kind: List
 metadata:
   resourceVersion: ""

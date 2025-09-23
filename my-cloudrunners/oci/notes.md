@@ -3,24 +3,31 @@
 ## Oracle cloud set up
 
 ```
-COMPARTMENT_ID=...
+COMPARTMENT_ID=ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q
 
 # List availability-domains:
 oci iam availability-domain list
-AVAILABILITY_DOMAIN=mfcO:US-ASHBURN-AD-1
+AVAILABILITY_DOMAIN=tdbQ:US-ASHBURN-AD-1
 
 # Pick the correct subnet for the AD
 oci network vcn list --compartment-id ${COMPARTMENT_ID}
 oci network vcn create --compartment-id ${COMPARTMENT_ID} --cidr-blocks '["10.0.0.0/16"]'
 
+VCN_ID=ocid1.vcn.oc1.iad.amaaaaaazljd6pqa5xledbeicpayh3mfaiz2txq63q4rdi7cyc5oo432oola
+
 oci network subnet list --compartment-id ${COMPARTMENT_ID}
 oci network subnet create --compartment-id ${COMPARTMENT_ID} --cidr-block 10.0.0.0/16 --vcn-id ${VCN_ID}
+
+SUBNET_ID=ocid1.subnet.oc1.iad.aaaaaaaa2z3oherkse4dapgrzqesa2p7pocvyl2vj5zcd6wgwftdluwpm4ga
 oci network subnet get --subnet-id ${SUBNET_ID}
+
+ROUTE_TABLE_ID=ocid1.routetable.oc1.iad.aaaaaaaawesua3udj7baf47yzablrjdxyvzc34indfnmo5ltms2cc6zwc7dq
 
 oci network route-table get --rt-id ${ROUTE_TABLE_ID}
 
 oci network internet-gateway create --vcn-id ${VCN_ID} --compartment-id ${COMPARTMENT_ID} --is-enabled true
 
+INTERNET_GATEWAY_ID=ocid1.internetgateway.oc1.iad.aaaaaaaaotcs2xmbni4val4dtn34w4jv3piuovudual2rkufh7b54y5gy2gq
 ROUTE_RULES=$(cat <<EOF
 [
   {

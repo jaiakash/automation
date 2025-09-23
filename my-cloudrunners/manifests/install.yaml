@@ -2,16 +2,16 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: my-oracle-vm-gpu-a10-1-gha-rs-no-permission
+  name: kubeflow-oracle-vm-gpu-a10-1-gha-rs-no-permission
   namespace: arc-systems
   labels:
     helm.sh/chart: gha-rs-0.12.1
-    app.kubernetes.io/name: my-oracle-vm-gpu-a10-1
-    app.kubernetes.io/instance: my-oracle-vm-gpu-a10-1
+    app.kubernetes.io/name: kubeflow-oracle-vm-gpu-a10-1
+    app.kubernetes.io/instance: kubeflow-oracle-vm-gpu-a10-1
     app.kubernetes.io/version: "0.12.1"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: gha-rs
-    actions.github.com/scale-set-name: my-oracle-vm-gpu-a10-1
+    actions.github.com/scale-set-name: kubeflow-oracle-vm-gpu-a10-1
     actions.github.com/scale-set-namespace: arc-systems
   finalizers:
     - actions.github.com/cleanup-protection
@@ -19,16 +19,16 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: my-oracle-vm-gpu-a10-1-gha-rs-manager
+  name: kubeflow-oracle-vm-gpu-a10-1-gha-rs-manager
   namespace: arc-systems
   labels:
     helm.sh/chart: gha-rs-0.12.1
-    app.kubernetes.io/name: my-oracle-vm-gpu-a10-1
-    app.kubernetes.io/instance: my-oracle-vm-gpu-a10-1
+    app.kubernetes.io/name: kubeflow-oracle-vm-gpu-a10-1
+    app.kubernetes.io/instance: kubeflow-oracle-vm-gpu-a10-1
     app.kubernetes.io/version: "0.12.1"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: gha-rs
-    actions.github.com/scale-set-name: my-oracle-vm-gpu-a10-1
+    actions.github.com/scale-set-name: kubeflow-oracle-vm-gpu-a10-1
     actions.github.com/scale-set-namespace: arc-systems
     app.kubernetes.io/component: manager-role
   finalizers:
@@ -94,16 +94,16 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: my-oracle-vm-gpu-a10-1-gha-rs-manager
+  name: kubeflow-oracle-vm-gpu-a10-1-gha-rs-manager
   namespace: arc-systems
   labels:
     helm.sh/chart: gha-rs-0.12.1
-    app.kubernetes.io/name: my-oracle-vm-gpu-a10-1
-    app.kubernetes.io/instance: my-oracle-vm-gpu-a10-1
+    app.kubernetes.io/name: kubeflow-oracle-vm-gpu-a10-1
+    app.kubernetes.io/instance: kubeflow-oracle-vm-gpu-a10-1
     app.kubernetes.io/version: "0.12.1"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: gha-rs
-    actions.github.com/scale-set-name: my-oracle-vm-gpu-a10-1
+    actions.github.com/scale-set-name: kubeflow-oracle-vm-gpu-a10-1
     actions.github.com/scale-set-namespace: arc-systems
     app.kubernetes.io/component: manager-role-binding
   finalizers:
@@ -111,7 +111,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: my-oracle-vm-gpu-a10-1-gha-rs-manager
+  name: kubeflow-oracle-vm-gpu-a10-1-gha-rs-manager
 subjects:
 - kind: ServiceAccount
   name: arc-gha-rs-controller
@@ -120,23 +120,23 @@ subjects:
 apiVersion: actions.github.com/v1alpha1
 kind: AutoscalingRunnerSet
 metadata:
-  name: my-oracle-vm-gpu-a10-1
+  name: kubeflow-oracle-vm-gpu-a10-1
   namespace: arc-systems
   labels:
     app.kubernetes.io/component: "autoscaling-runner-set"
     helm.sh/chart: gha-rs-0.12.1
-    app.kubernetes.io/name: my-oracle-vm-gpu-a10-1
-    app.kubernetes.io/instance: my-oracle-vm-gpu-a10-1
+    app.kubernetes.io/name: kubeflow-oracle-vm-gpu-a10-1
+    app.kubernetes.io/instance: kubeflow-oracle-vm-gpu-a10-1
     app.kubernetes.io/version: "0.12.1"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: gha-rs
-    actions.github.com/scale-set-name: my-oracle-vm-gpu-a10-1
+    actions.github.com/scale-set-name: kubeflow-oracle-vm-gpu-a10-1
     actions.github.com/scale-set-namespace: arc-systems
   annotations:
     actions.github.com/values-hash: 5a160ea308cd51d6f4c27515e5040d9dc34be0acda7289ea0d7ad9cffff39e1
-    actions.github.com/cleanup-manager-role-binding: my-oracle-vm-gpu-a10-1-gha-rs-manager
-    actions.github.com/cleanup-manager-role-name: my-oracle-vm-gpu-a10-1-gha-rs-manager
-    actions.github.com/cleanup-no-permission-service-account-name: my-oracle-vm-gpu-a10-1-gha-rs-no-permission
+    actions.github.com/cleanup-manager-role-binding: kubeflow-oracle-vm-gpu-a10-1-gha-rs-manager
+    actions.github.com/cleanup-manager-role-name: kubeflow-oracle-vm-gpu-a10-1-gha-rs-manager
+    actions.github.com/cleanup-no-permission-service-account-name: kubeflow-oracle-vm-gpu-a10-1-gha-rs-no-permission
 spec:
   githubConfigUrl: https://github.com/jaiakash/trainer
   githubConfigSecret: github-arc-secret
@@ -150,11 +150,9 @@ spec:
         args:
         - --arch=amd64
         - --shape=VM.GPU.A10.1
-        - --shape-ocpus=15
-        - --shape-memory-in-gbs=240
-        - --boot-volume-size-in-gbs=600
+        - --boot-volume-size-in-gbs=400
         - --availability-domain=tdbQ:US-ASHBURN-AD-1
-        - --compartment-id=ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q
+        - --compartment-id=ocid1.compartment.oc1..aaaaaaaaczejzfg7ixiqrl7r4jr5dohrtxfpuhdinrq4okj67hskmhgglyfq
         - --subnet-id=ocid1.subnet.oc1.iad.aaaaaaaa7b7bezpa3h5iubnkgd5mx3ynhxnrvtnnbiqkponeulfvybsxg35q
         - --image-id=ocid1.image.oc1.iad.aaaaaaaawkg4mcnr72dcgtprfpjovsvipdabun2xfli7ns3ni7vdn4m3id3a
         env:
@@ -173,7 +171,7 @@ spec:
         fsGroup: 1001
         supplementalGroups:
         - 999
-      serviceAccountName: my-oracle-vm-gpu-a10-1-gha-rs-no-permission
+      serviceAccountName: kubeflow-oracle-vm-gpu-a10-1-gha-rs-no-permission
       volumes:
       - name: oci-config
         secret:

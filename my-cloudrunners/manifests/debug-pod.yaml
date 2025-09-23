@@ -4,10 +4,10 @@ metadata:
   name: debug-runner
   namespace: arc-systems
 spec:
-  serviceAccountName: my-oracle-vm-gpu-a10-1-gha-rs-no-permission
+  serviceAccountName: kubeflow-oracle-vm-gpu-a10-1-gha-rs-no-permission
   containers:
   - name: runner
-    image: akashjaiswal03/my-cloudrunner-oci:latest
+    image: akashjaiswal03/kubeflow-gpu-cloudrunner-oci:latest
     imagePullPolicy: Always
     command: ["/bin/sh", "-c", "sleep 3600"]
     env:

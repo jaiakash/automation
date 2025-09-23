@@ -194,7 +194,7 @@ func init() {
 	flags.Int64Var(
 		&args.bootVolumeSizeInGBs,
 		"boot-volume-size-in-gbs",
-		600,
+		400,
 		"Boot volume size in GBs")
 
     // TODO Setup a custom image with NVIDIA drivers pre-installed
