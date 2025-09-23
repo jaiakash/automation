@@ -82,7 +82,7 @@ func run(cmd *cobra.Command, argv []string) error {
 	}
 
 	// Create a new ephemeral machine
-	machine, err := oci.NewEphemeralMachine(ctx, computeClient, networkClient, core.LaunchInstanceDetails{
+	launchDetails := core.LaunchInstanceDetails{
 		AvailabilityDomain: common.String(args.availabilityDomain),
 		CompartmentId:      common.String(args.compartmentId),
 		Shape:              common.String(args.shape),
@@ -90,10 +90,6 @@ func run(cmd *cobra.Command, argv []string) error {
 		CreateVnicDetails: &core.CreateVnicDetails{
 			SubnetId:       common.String(args.subnetId),
 			AssignPublicIp: common.Bool(true),
-		},
-		ShapeConfig: &core.LaunchInstanceShapeConfigDetails{
-			MemoryInGBs: common.Float32(args.shapeMemoryInGBs),
-			Ocpus:       common.Float32(args.shapeOcpus),
 		},
 		Metadata: map[string]string{
 			"ssh_authorized_keys": sshKeyPair.PublicKey,
@@ -103,7 +99,16 @@ func run(cmd *cobra.Command, argv []string) error {
 			BootVolumeSizeInGBs: common.Int64(args.bootVolumeSizeInGBs),
 			BootVolumeVpusPerGB: common.Int64(120),
 		},
-	})
+	}
+
+	if strings.Contains(args.shape, ".Flex") {
+		launchDetails.ShapeConfig = &core.LaunchInstanceShapeConfigDetails{
+			MemoryInGBs: common.Float32(args.shapeMemoryInGBs),
+			Ocpus:       common.Float32(args.shapeOcpus),
+		}
+	}
+
+	machine, err := oci.NewEphemeralMachine(ctx, computeClient, networkClient, launchDetails)
 	if err != nil {
 		return fmt.Errorf("failed to create machine: %w", err)
 	}
