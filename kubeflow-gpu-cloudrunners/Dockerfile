@@ -3,7 +3,7 @@ FROM golang:1.24-alpine AS build-golang
 
 WORKDIR /app
 
-COPY my-cloudrunners/ /app
+COPY kubeflow-gpu-cloudrunners/ /app
 
 # The WORKDIR is /app, and the source is in ./oci
 RUN go build -o bin/cloudrunner-oci ./oci/main.go

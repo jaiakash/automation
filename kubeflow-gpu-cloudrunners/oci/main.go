@@ -175,14 +175,14 @@ func init() {
 	flags.StringVar(
 		&args.compartmentId,
 		"compartment-id",
-		"ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q",
+		"ocid1.compartment.oc1..aaaaaaaaczejzfg7ixiqrl7r4jr5dohrtxfpuhdinrq4okj67hskmhgglyfq",
 		"Compartment ID")
 
 	// TODO generic subnet selection based on AD
 	flags.StringVar(
 		&args.subnetId,
 		"subnet-id",
-		"ocid1.subnet.oc1.iad.aaaaaaaa7b7bezpa3h5iubnkgd5mx3ynhxnrvtnnbiqkponeulfvybsxg35q",
+		"ocid1.subnet.oc1.iad.aaaaaaaaff7mqwjlremjpiq72i2wjgfjfjz2dhymvtdybhu5mdaikovb67ka",
 		"Subnet ID")
 
 	flags.StringVar(

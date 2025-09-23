@@ -51,7 +51,7 @@ items:
         - --boot-volume-size-in-gbs=400
         - --availability-domain=tdbQ:US-ASHBURN-AD-1
         - --compartment-id=ocid1.compartment.oc1..aaaaaaaaczejzfg7ixiqrl7r4jr5dohrtxfpuhdinrq4okj67hskmhgglyfq
-        - --subnet-id=ocid1.subnet.oc1.iad.aaaaaaaa7b7bezpa3h5iubnkgd5mx3ynhxnrvtnnbiqkponeulfvybsxg35q
+        - --subnet-id=ocid1.subnet.oc1.iad.aaaaaaaaff7mqwjlremjpiq72i2wjgfjfjz2dhymvtdybhu5mdaikovb67ka
         - --image-id=ocid1.image.oc1.iad.aaaaaaaawkg4mcnr72dcgtprfpjovsvipdabun2xfli7ns3ni7vdn4m3id3a
         env:
         - name: OCI_CONFIG_FILE
