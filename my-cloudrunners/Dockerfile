@@ -3,13 +3,16 @@ FROM golang:1.24-alpine AS build-golang
 
 WORKDIR /app
 
-COPY . .
+COPY my-cloudrunners/ /app
 
-RUN go build -o bin/cloudrunner-oci oci/main.go
+# Change to the correct directory before building
+WORKDIR /app/my-cloudrunners
+RUN go build -o bin/cloudrunner-oci ./oci/main.go
 
 ### Final Stage
-FROM gcr.io/distroless/base-debian10
+FROM gcr.io/distroless/cc-debian10
 
-COPY --from=0 /app/bin/cloudrunner-oci /
+# Adjust the copy path to get the binary from the correct location
+COPY --from=build-golang /app/my-cloudrunners/bin/cloudrunner-oci /
 
 ENTRYPOINT [ "/cloudrunner-oci" ]

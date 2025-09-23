@@ -5,10 +5,10 @@ metadata:
   name: my-oracle-vm-gpu-a10-1-gha-rs-no-permission
   namespace: arc-systems
   labels:
-    helm.sh/chart: gha-rs-0.11.0
+    helm.sh/chart: gha-rs-0.12.1
     app.kubernetes.io/name: my-oracle-vm-gpu-a10-1
     app.kubernetes.io/instance: my-oracle-vm-gpu-a10-1
-    app.kubernetes.io/version: "0.11.0"
+    app.kubernetes.io/version: "0.12.1"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: gha-rs
     actions.github.com/scale-set-name: my-oracle-vm-gpu-a10-1
@@ -22,10 +22,10 @@ metadata:
   name: my-oracle-vm-gpu-a10-1-gha-rs-manager
   namespace: arc-systems
   labels:
-    helm.sh/chart: gha-rs-0.11.0
+    helm.sh/chart: gha-rs-0.12.1
     app.kubernetes.io/name: my-oracle-vm-gpu-a10-1
     app.kubernetes.io/instance: my-oracle-vm-gpu-a10-1
-    app.kubernetes.io/version: "0.11.0"
+    app.kubernetes.io/version: "0.12.1"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: gha-rs
     actions.github.com/scale-set-name: my-oracle-vm-gpu-a10-1
@@ -97,10 +97,10 @@ metadata:
   name: my-oracle-vm-gpu-a10-1-gha-rs-manager
   namespace: arc-systems
   labels:
-    helm.sh/chart: gha-rs-0.11.0
+    helm.sh/chart: gha-rs-0.12.1
     app.kubernetes.io/name: my-oracle-vm-gpu-a10-1
     app.kubernetes.io/instance: my-oracle-vm-gpu-a10-1
-    app.kubernetes.io/version: "0.11.0"
+    app.kubernetes.io/version: "0.12.1"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: gha-rs
     actions.github.com/scale-set-name: my-oracle-vm-gpu-a10-1
@@ -126,10 +126,10 @@ metadata:
   namespace: arc-systems
   labels:
     app.kubernetes.io/component: "autoscaling-runner-set"
-    helm.sh/chart: gha-rs-0.11.0
+    helm.sh/chart: gha-rs-0.12.1
     app.kubernetes.io/name: my-oracle-vm-gpu-a10-1
     app.kubernetes.io/instance: my-oracle-vm-gpu-a10-1
-    app.kubernetes.io/version: "0.11.0"
+    app.kubernetes.io/version: "0.12.1"
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/part-of: gha-rs
     actions.github.com/scale-set-name: my-oracle-vm-gpu-a10-1
@@ -140,10 +140,10 @@ metadata:
     actions.github.com/cleanup-manager-role-name: my-oracle-vm-gpu-a10-1-gha-rs-manager
     actions.github.com/cleanup-no-permission-service-account-name: my-oracle-vm-gpu-a10-1-gha-rs-no-permission
 spec:
-  githubConfigUrl: https://github.com/enterprises/cncf
+  githubConfigUrl: https://github.com/jaiakash/trainer
   githubConfigSecret: github-arc-secret
-  maxRunners: 100
-  minRunners: 0
+  maxRunners: 10
+  minRunners: 1
   template:
     spec:
       containers:
@@ -154,9 +154,10 @@ spec:
         - --shape=VM.GPU.A10.1
         - --shape-ocpus=15
         - --shape-memory-in-gbs=240
-        - --availability-domain=YOUR_AVAILABILITY_DOMAIN
-        - --compartment-id=YOUR_COMPARTMENT_ID
-        - --subnet-id=YOUR_SUBNET_ID
+        - --boot-volume-size-in-gbs=200
+        - --availability-domain=US-ASHBURN-AD-1
+        - --compartment-id=ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q
+        - --subnet-id=ocid1.subnet.oc1.iad.aaaaaaaat5nbqkgivc5mzfueek7cigb34qhhnwpx7h3obneldgtqld6txgca
         env:
         - name: OCI_CONFIG_FILE
           value: /etc/oci/config

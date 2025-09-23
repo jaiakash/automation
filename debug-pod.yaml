@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-runner
+  namespace: arc-systems
+spec:
+  containers:
+  - name: runner
+    image: akashjaiswal03/my-cloudrunner-oci:latest
+    command: ["/bin/sh", "-c", "sleep 3600"]
+    args:
+    - --arch=amd64
+    - --shape=VM.GPU.A10.1
+    - --shape-ocpus=15
+    - --shape-memory-in-gbs=240
+    - --boot-volume-size-in-gbs=200
+    - --availability-domain=US-ASHBURN-AD-1
+    - --compartment-id=ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q
+    - --subnet-id=ocid1.subnet.oc1.iad.aaaaaaaat5nbqkgivc5mzfueek7cigb34qhhnwpx7h3obneldgtqld6txgca
+    env:
+    - name: OCI_CONFIG_FILE
+      value: /etc/oci/config
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+    - mountPath: /etc/oci
+      name: oci-config
+      readOnly: true
+    - mountPath: /oci
+      name: oci-api-key
+      readOnly: true
+  restartPolicy: Never
+  securityContext:
+    fsGroup: 1001
+    supplementalGroups:
+    - 999
+  serviceAccountName: my-oracle-vm-gpu-a10-1-gha-rs-no-permission
+  volumes:
+  - name: oci-config
+    secret:
+      secretName: oci-config
+  - name: oci-api-key
+    secret:
+      secretName: oci-api-key
