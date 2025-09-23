@@ -17,8 +17,8 @@ import (
 )
 
 var Cmd = &cobra.Command{
-	Use:  "gha-runner",
-	Long: "Run a GitHub Actions runner (on Oracle Cloud Infrastructure)",
+	Use:  "gha-gpu-runner",
+	Long: "Run a GitHub Actions runner (on GPU powered Oracle Cloud Infrastructure)",
 	RunE: run,
 }
 
@@ -73,7 +73,7 @@ func run(cmd *cobra.Command, argv []string) error {
 		AvailabilityDomain: common.String(args.availabilityDomain),
 		Shape:              common.String(args.shape),
 		ImageId:            common.String(args.imageId),
-		DisplayName:        common.String(fmt.Sprintf("gha-runner-%s-%s", args.arch, time.Now().Format("20060102-150405"))),
+		DisplayName:        common.String(fmt.Sprintf("kubeflow-gha-gpu-runner-%s-%s", args.arch, time.Now().Format("20060102-150405"))),
 		CreateVnicDetails: &core.CreateVnicDetails{
 			AssignPublicIp: common.Bool(true),
 			SubnetId:       common.String(args.subnetId),
@@ -178,6 +178,7 @@ func init() {
 		"ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q",
 		"Compartment ID")
 
+	// TODO generic subnet selection based on AD
 	flags.StringVar(
 		&args.subnetId,
 		"subnet-id",
@@ -196,9 +197,10 @@ func init() {
 		600,
 		"Boot volume size in GBs")
 
+    // TODO Setup a custom image with NVIDIA drivers pre-installed
 	flags.StringVar(
 		&args.imageId,
 		"image-id",
 		"ocid1.image.oc1.iad.aaaaaaaawkg4mcnr72dcgtprfpjovsvipdabun2xfli7ns3ni7vdn4m3id3a",
-		"OCI Image OCID to use for the runner (required)")
+		"OCI Image OCID to use for the runner (using GPU based custom image)")
 }
