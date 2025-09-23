@@ -60,12 +60,12 @@ func run(cmd *cobra.Command, argv []string) error {
 	// List Images and retrieve the latest ID by type and arch
 
 	images, err := computeClient.ListImages(ctx, core.ListImagesRequest{
-		CompartmentId:   common.String(args.compartmentId),
-		OperatingSystem: common.String(fmt.Sprintf("ubuntu-22.04-%s-gha-image", args.arch)),
-		SortBy:          core.ListImagesSortByTimecreated,
-		SortOrder:       core.ListImagesSortOrderDesc,
-		Limit:           common.Int(1),
-		LifecycleState:  core.ImageLifecycleStateAvailable,
+		CompartmentId:  common.String(args.compartmentId),
+		DisplayName:    common.String(fmt.Sprintf("ubuntu-22.04-%s-gha-image", args.arch)),
+		SortBy:         core.ListImagesSortByTimecreated,
+		SortOrder:      core.ListImagesSortOrderDesc,
+		Limit:          common.Int(1),
+		LifecycleState: core.ImageLifecycleStateAvailable,
 	})
 	if err != nil {
 		panic(err)
