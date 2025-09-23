@@ -30,8 +30,6 @@ var args struct {
 	subnetId            string
 	availabilityDomain  string
 	shape               string
-	shapeOcpus          float32
-	shapeMemoryInGBs    float32
 	bootVolumeSizeInGBs int64
 	imageId             string
 }
@@ -70,25 +68,19 @@ func run(cmd *cobra.Command, argv []string) error {
 		return fmt.Errorf("creating ssh key pair: %w", err)
 	}
 
-	// Create a new ephemeral machine
 	launchDetails := core.LaunchInstanceDetails{
-		AvailabilityDomain: common.String(args.availabilityDomain),
 		CompartmentId:      common.String(args.compartmentId),
+		AvailabilityDomain: common.String(args.availabilityDomain),
 		Shape:              common.String(args.shape),
+		ImageId:            common.String(args.imageId),
 		DisplayName:        common.String(fmt.Sprintf("gha-runner-%s-%s", args.arch, time.Now().Format("20060102-150405"))),
-		SubnetId:           common.String(args.subnetId), // required
+		CreateVnicDetails: &core.CreateVnicDetails{
+			AssignPublicIp: common.Bool(true),
+			SubnetId:       common.String(args.subnetId),
+		},
 		Metadata: map[string]string{
 			"ssh_authorized_keys": sshKeyPair.PublicKey,
 		},
-		SourceDetails: &core.InstanceSourceViaImageDetails{
-			ImageId:             common.String(args.imageId),
-			BootVolumeSizeInGBs: common.Int64(args.bootVolumeSizeInGBs),
-			BootVolumeVpusPerGB: common.Int64(120),
-		},
-		CreateVnicDetails: &core.CreateVnicDetails{
-			AssignPublicIp: common.Bool(true), // optional, no SubnetId here
-		},
-		ShapeConfig: nil, // important: must be nil for standard shapes
 	}
 
 	machine, err := oci.NewEphemeralMachine(ctx, computeClient, networkClient, launchDetails)
@@ -164,8 +156,8 @@ func init() {
 
 	flags.BoolVar(
 		&args.debug,
-		"debug", 
-		false, 
+		"debug",
+		true,
 		"Enable debug logging")
 
 	flags.StringVar(
@@ -177,7 +169,7 @@ func init() {
 	flags.StringVar(
 		&args.availabilityDomain,
 		"availability-domain",
-		"US-ASHBURN-AD-1",
+		"tdbQ:US-ASHBURN-AD-1",
 		"Availability Domain")
 
 	flags.StringVar(
@@ -189,7 +181,7 @@ func init() {
 	flags.StringVar(
 		&args.subnetId,
 		"subnet-id",
-		"ocid1.subnet.oc1.iad.aaaaaaaat5nbqkgivc5mzfueek7cigb34qhhnwpx7h3obneldgtqld6txgca",
+		"ocid1.subnet.oc1.iad.aaaaaaaa7b7bezpa3h5iubnkgd5mx3ynhxnrvtnnbiqkponeulfvybsxg35q",
 		"Subnet ID")
 
 	flags.StringVar(
@@ -197,18 +189,6 @@ func init() {
 		"shape",
 		"VM.GPU.A10.1",
 		"VM Shape")
-
-	flags.Float32Var(
-		&args.shapeOcpus,
-		"shape-ocpus",
-		15,
-		"Number of OCPUs for flexible shapes")
-
-	flags.Float32Var(
-		&args.shapeMemoryInGBs,
-		"shape-memory-in-gbs",
-		240,
-		"Memory for flexible shapes")
 
 	flags.Int64Var(
 		&args.bootVolumeSizeInGBs,
