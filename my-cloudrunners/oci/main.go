@@ -24,13 +24,14 @@ var Cmd = &cobra.Command{
 var args struct {
 	debug bool
 
-	arch               string
-	compartmentId      string
-	subnetId           string
-	availabilityDomain string
-	shape              string
-	shapeOcpus         float32
-	shapeMemoryInGBs   float32
+	arch                string
+	compartmentId       string
+	subnetId            string
+	availabilityDomain  string
+	shape               string
+	shapeOcpus          float32
+	shapeMemoryInGBs    float32
+	bootVolumeSizeInGBs int64
 }
 
 func main() {
@@ -60,7 +61,7 @@ func run(cmd *cobra.Command, argv []string) error {
 
 	images, err := computeClient.ListImages(ctx, core.ListImagesRequest{
 		CompartmentId:   common.String(args.compartmentId),
-		OperatingSystem: common.String(fmt.Sprintf("ubuntu-24.04-%s-gha-image", args.arch)),
+		OperatingSystem: common.String(fmt.Sprintf("ubuntu-22.04-%s-gha-image", args.arch)),
 		SortBy:          core.ListImagesSortByTimecreated,
 		SortOrder:       core.ListImagesSortOrderDesc,
 		Limit:           common.Int(1),
@@ -99,7 +100,7 @@ func run(cmd *cobra.Command, argv []string) error {
 		},
 		SourceDetails: &core.InstanceSourceViaImageDetails{
 			ImageId:             common.String(*latestImage.Id),
-			BootVolumeSizeInGBs: common.Int64(600),
+			BootVolumeSizeInGBs: common.Int64(args.bootVolumeSizeInGBs),
 			BootVolumeVpusPerGB: common.Int64(120),
 		},
 	})
@@ -194,37 +195,43 @@ func init() {
 	flags.StringVar(
 		&args.availabilityDomain,
 		"availability-domain",
-		"bzBe:US-SANJOSE-1-AD-1",
+		"US-ASHBURN-AD-1",
 		"Availability Domain",
 	)
 	flags.StringVar(
 		&args.compartmentId,
 		"compartment-id",
-		"ocid1.compartment.oc1..aaaaaaaa22icap66vxktktubjlhf6oxvfhev6n7udgje2chahyrtq65ga63a",
+		"ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q",
 		"Compartment ID",
 	)
 	flags.StringVar(
 		&args.subnetId,
 		"subnet-id",
-		"ocid1.subnet.oc1.us-sanjose-1.aaaaaaaahgdslvujnywu3hvhqbvgz23souseseozvypng7ehnxgcotislubq",
+		"ocid1.subnet.oc1.iad.aaaaaaaat5nbqkgivc5mzfueek7cigb34qhhnwpx7h3obneldgtqld6txgca",
 		"Subnet ID",
 	)
 	flags.StringVar(
 		&args.shape,
 		"shape",
-		"VM.Standard.E2.2",
+		"VM.GPU.A10.1",
 		"VM Shape",
 	)
 	flags.Float32Var(
 		&args.shapeOcpus,
 		"shape-ocpus",
-		0.0, // Default to 0, indicating not set.
+		15,
 		"Number of OCPUs for flexible shapes (e.g., 1.0, 2.0). Required if a '.Flex' shape is used.",
 	)
 	flags.Float32Var(
 		&args.shapeMemoryInGBs,
 		"shape-memory-in-gbs",
-		0.0, // Default to 0.
+		240,
 		"Amount of memory in GBs for flexible shapes (e.g., 16.0, 32.0). Required if a '.Flex' shape is used.",
+	)
+	flags.Int64Var(
+		&args.bootVolumeSizeInGBs,
+		"boot-volume-size-in-gbs",
+		600,
+		"Boot volume size in GBs.",
 	)
 }

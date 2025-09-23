@@ -114,10 +114,8 @@ roleRef:
   name: my-oracle-vm-gpu-a10-1-gha-rs-manager
 subjects:
 - kind: ServiceAccount
-  name: 
-    cncf-gha-controller-gha-rs-controller
-  namespace: 
-    arc-systems
+  name: arc-gha-rs-controller
+  namespace: arc-systems
 ---
 apiVersion: actions.github.com/v1alpha1
 kind: AutoscalingRunnerSet
@@ -154,7 +152,7 @@ spec:
         - --shape=VM.GPU.A10.1
         - --shape-ocpus=15
         - --shape-memory-in-gbs=240
-        - --boot-volume-size-in-gbs=200
+        - --boot-volume-size-in-gbs=600
         - --availability-domain=US-ASHBURN-AD-1
         - --compartment-id=ocid1.compartment.oc1..aaaaaaaazcfftdqqpqguwkpnk5pq3qxnav6olpodrz33sqz55lumxu6nie3q
         - --subnet-id=ocid1.subnet.oc1.iad.aaaaaaaat5nbqkgivc5mzfueek7cigb34qhhnwpx7h3obneldgtqld6txgca
