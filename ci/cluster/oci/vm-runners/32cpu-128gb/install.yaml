@@ -296,7 +296,7 @@ spec:
     spec:
       containers:
       - name: runner
-        image: ghcr.io/cncf/gha-cloudrunner:17383622263
+        image: ghcr.io/cncf/gha-cloudrunner:19625960530
         args:
         - --arch=amd64
         - --shape=VM.Standard.E5.Flex
@@ -329,3 +329,10 @@ spec:
       - name: oci-api-key
         secret:
           secretName: oci-api-key
+      tolerations:
+      - key: "cncf.io/gha-runner"
+        operator: "Exists"
+        effect: "NoSchedule"
+      nodeSelector:
+        nodepool: karpenter
+

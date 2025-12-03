@@ -102,6 +102,11 @@ func run(cmd *cobra.Command, argv []string) error {
 			BootVolumeSizeInGBs: common.Int64(600),
 			BootVolumeVpusPerGB: common.Int64(120),
 		},
+		AgentConfig: &core.LaunchInstanceAgentConfigDetails{PluginsConfig: []core.InstanceAgentPluginConfigDetails{{DesiredState: core.InstanceAgentPluginConfigDetailsDesiredStateEnabled,
+			Name: common.String("Compute Instance Monitoring")}},
+			AreAllPluginsDisabled: common.Bool(false),
+			IsMonitoringDisabled:  common.Bool(false),
+		},
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create machine: %w", err)
