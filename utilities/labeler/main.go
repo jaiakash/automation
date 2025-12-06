@@ -31,6 +31,7 @@ type Label struct {
 type ActionSpec struct {
 	Match string `yaml:"match,omitempty"`
 	Label string `yaml:"label,omitempty"`
+	Users string `yaml:"users,omitempty"`
 }
 
 type Action struct {
@@ -80,6 +81,30 @@ func loadConfigFromURL(url string) (*LabelsYAML, error) {
 		return nil, fmt.Errorf("failed to decode labels.yaml: %v", err)
 	}
 	return &cfg, nil
+}
+
+// sanitizeAssignees removes leading '@' and trims spaces from each username.
+func sanitizeAssignees(assignees []string) []string {
+	sanitized := make([]string, len(assignees))
+	for i, a := range assignees {
+		sanitized[i] = strings.TrimSpace(strings.TrimPrefix(a, "@"))
+	}
+	return sanitized
+}
+
+func assignUsers(ctx context.Context, client *github.Client, owner, repo string, issueNum int, assignees []string) {
+	if len(assignees) == 0 {
+		log.Printf("No assignees specified, skipping")
+		return
+	}
+	// Sanitize users: remove leading '@' and trim spaces
+	assignees = sanitizeAssignees(assignees)
+	_, _, err := client.Issues.AddAssignees(ctx, owner, repo, issueNum, assignees)
+	if err != nil {
+		log.Printf("failed to add assignees %v to %s/%s#%d: %v", assignees, owner, repo, issueNum, err)
+		return
+	}
+	log.Printf("Added assignees: %v to %s/%s#%d", assignees, owner, repo, issueNum)
 }
 
 func githubClient() (*github.Client, error) {
@@ -241,6 +266,19 @@ func main() {
 							if label != "" {
 								removeLabel(ctx, client, owner, repo, toInt(issueNum), label)
 							}
+						case "assign":
+							var assignees []string
+							if action.Spec.Users != "" {
+								assignees = strings.Split(renderLabel(action.Spec.Users, argv), ",")
+							} else if label != "" {
+								assignees = strings.Split(label, ",")
+							} else {
+								assignees = argv
+							}
+							for i, a := range assignees {
+								assignees[i] = strings.TrimSpace(strings.TrimPrefix(a, "@"))
+							}
+							assignUsers(ctx, client, owner, repo, toInt(issueNum), assignees)
 						}
 					}
 				}
